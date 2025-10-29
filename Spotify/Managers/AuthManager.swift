@@ -17,6 +17,19 @@ final class AuthManager {
        static let aa = "8bee83f1304a435e96d229f7d2509acb"
     }
     
+    public var signInURL: URL? {
+        // 定义Spotify认证所需的权限范围，这里是读取用户私有信息的权限
+        let scopes = "user-read-private"
+        // 认证成功后的重定向URL
+        let redirectURI = "https://www.iosacademy.io/"
+        // Spotify账号服务的授权基础URL
+        let base = "https://accounts.spotify.com/authorize"
+        // 拼接完整的授权URL字符串，包含响应类型、客户端ID、权限范围和重定向URL
+        let string = "\(base)?response_type=code&client_id=\(Constants.clientID)&scope=\(scopes)&redirect_uri=\(redirectURI)&show_diolog=TRUE"
+        // 将字符串转换为URL并返回
+        return URL(string: string)
+    }
+    
     // 私有初始化方法，防止外部创建实例，确保单例模式
     private init() {}
     

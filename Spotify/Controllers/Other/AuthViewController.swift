@@ -26,7 +26,27 @@ class AuthViewController: UIViewController, WKNavigationDelegate {
         title = "登陆"
         webview.navigationDelegate = self
         view.addSubview(webview)
+        guard let url = AuthManager.shared.signInURL else {
+            return
+        }
+        webview.load(URLRequest(url: url))
         // Do any additional setup after loading the view.
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        
+        if let url = navigationAction.request.url,
+           let code = URLComponents(string: url.absoluteString)?
+                .queryItems?.first(where: { $0.name == "code" })?.value {
+            print("Code: \(code)")
+            // 完成回调
+           
+            decisionHandler(.cancel) // 拦截 OAuth 重定向，防止网页继续加载
+            return
+        }
+        
+        decisionHandler(.allow)
     }
     
     override func viewDidLayoutSubviews() {
