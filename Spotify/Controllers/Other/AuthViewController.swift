@@ -6,13 +6,32 @@
 //
 
 import UIKit
+import WebKit
 
-class AuthViewController: UIViewController {
+class AuthViewController: UIViewController, WKNavigationDelegate {
+    
+    private let webview:WKWebView =  {
+        let prefs = WKWebpagePreferences()
+        prefs.allowsContentJavaScript = true
+        let config  = WKWebViewConfiguration()
+        config.defaultWebpagePreferences = prefs
+        let webview = WKWebView(frame: .zero,configuration: config)
+        return webview
+    }()
+    
+    public var completionHandler:((Bool) -> Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        title = "登陆"
+        webview.navigationDelegate = self
+        view.addSubview(webview)
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        webview.frame = view.bounds
     }
     
 

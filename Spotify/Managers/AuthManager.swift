@@ -11,6 +11,12 @@ final class AuthManager {
     // 单例实例，全局唯一访问点
     static let shared = AuthManager()
     
+
+    struct Constants {
+       static let clientID = "8bee83f1304a435e96d229f7d2509acb"
+       static let aa = "8bee83f1304a435e96d229f7d2509acb"
+    }
+    
     // 私有初始化方法，防止外部创建实例，确保单例模式
     private init() {}
     
