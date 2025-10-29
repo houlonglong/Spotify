@@ -56,23 +56,3 @@ class TabBarViewController: UITabBarController {
 
 }
 
-import SwiftUI
-
-struct TabBarViewControllerPreview: PreviewProvider {
-    static var previews: some View {
-        ContainerView()
-            .edgesIgnoringSafeArea(.all) // 让预览铺满
-    }
-}
-
-struct ContainerView: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> TabBarViewController {
-        return TabBarViewController()
-    }
-    
-    func updateUIViewController(_ uiViewController: TabBarViewController, context: Context) {
-        // 通常不需要更新逻辑
-//        uiViewController.view.setNeedsLayout()
-//               uiViewController.view.layoutIfNeeded()
-    }
-}

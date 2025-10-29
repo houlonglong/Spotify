@@ -11,6 +11,8 @@ class WelcomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Spotify"
+        view.backgroundColor = .green
 
         // Do any additional setup after loading the view.
     }
@@ -26,4 +28,19 @@ class WelcomeViewController: UIViewController {
     }
     */
 
+}
+
+
+
+import SwiftUI
+struct WelcomeViewControllerPreview: PreviewProvider {
+    static var previews: some View {
+        UIViewControllerPreview {
+            let  webNav = UINavigationController(rootViewController: WelcomeViewController())
+              webNav.navigationBar.prefersLargeTitles = true
+              webNav.viewControllers.first?.navigationItem.largeTitleDisplayMode = .always;
+           return  webNav
+        }
+        .edgesIgnoringSafeArea(.all)
+    }
 }
