@@ -21,22 +21,26 @@ class TabBarViewController: UITabBarController {
         search.title = "搜索"
         library.title = "歌单"
         
+        
         home.navigationItem.largeTitleDisplayMode = .always;
         search.navigationItem.largeTitleDisplayMode = .always;
         library.navigationItem.largeTitleDisplayMode = .always;
         
         
-        let homeNav = UINavigationController(rootViewController: home);
-        let searchNav = UINavigationController(rootViewController: search);
-        let libraryNav = UINavigationController(rootViewController: library);
+        
+        let homeNav = UINavigationController(rootViewController: home)
+        let searchNav = UINavigationController(rootViewController: search)
+        let libraryNav = UINavigationController(rootViewController: library)
+        
+        homeNav.tabBarItem = UITabBarItem(title:home.title, image: UIImage(systemName: "house"), tag: 1)
+        searchNav.tabBarItem = UITabBarItem(title: "搜索", image: UIImage(systemName: "magnifyingglass"), tag: 2)
+        libraryNav.tabBarItem = UITabBarItem(title: "歌单", image: UIImage(systemName: "music.note.list"), tag: 3)
       
 //        homeNav.navigationBar.prefersLargeTitles = true
 //        searchNav.navigationBar.prefersLargeTitles = true
 //        libraryNav.navigationBar.prefersLargeTitles = true
         
-        homeNav.tabBarItem =  UITabBarItem(title: home.title, image: UIImage(systemName: "house"),tag: 1)
-        search.tabBarItem =  UITabBarItem(title:search.title, image: UIImage(systemName: "magnifyingglass"),tag: 2)
-        library.tabBarItem =  UITabBarItem(title: library.title, image: UIImage(systemName: "music.note.list"),tag: 3)
+   
         setViewControllers([homeNav,searchNav,libraryNav], animated: false)
         
     }
@@ -50,4 +54,25 @@ class TabBarViewController: UITabBarController {
     }
     */
 
+}
+
+import SwiftUI
+
+struct TabBarViewControllerPreview: PreviewProvider {
+    static var previews: some View {
+        ContainerView()
+            .edgesIgnoringSafeArea(.all) // 让预览铺满
+    }
+}
+
+struct ContainerView: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> TabBarViewController {
+        return TabBarViewController()
+    }
+    
+    func updateUIViewController(_ uiViewController: TabBarViewController, context: Context) {
+        // 通常不需要更新逻辑
+//        uiViewController.view.setNeedsLayout()
+//               uiViewController.view.layoutIfNeeded()
+    }
 }
