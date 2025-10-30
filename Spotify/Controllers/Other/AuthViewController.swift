@@ -10,8 +10,9 @@ import WebKit
 
 class AuthViewController: UIViewController, WKNavigationDelegate {
     
-    private var continuation: CheckedContinuation<String?, Never>?
+    private var continuation: CheckedContinuation<Bool?, Never>?
     private var webView: WKWebView!
+    var onAuthorizationCompleted: ((Bool) -> Void)?
     
     private let webview:WKWebView =  {
         let prefs = WKWebpagePreferences()
@@ -40,31 +41,29 @@ class AuthViewController: UIViewController, WKNavigationDelegate {
      func webView(_ webView: WKWebView,
                  decidePolicyFor navigationAction: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-
         if let url = navigationAction.request.url,
            let code = URLComponents(string: url.absoluteString)?
                         .queryItems?.first(where: { $0.name == "code" })?.value {
 
-            webView.isHidden = true
+//          webView.isHidden = true
             decisionHandler(.cancel)
 
             Task {
                 let success = await AuthManager.shared.exchangeCodeForToken(code: code)
-                print("✅ 授权码获取成功: \(success)")
-                continuation?.resume(returning: code)
-                continuation = nil
+                onAuthorizationCompleted?(true)
+               
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                }
             }
+         
             return
         }
 
         decisionHandler(.allow)
     }
     
-    func waitForCode() async -> String? {
-           await withCheckedContinuation { continuation in
-               self.continuation = continuation
-           }
-       }
+    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()

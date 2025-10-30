@@ -37,27 +37,32 @@ final class AuthManager {
     
     // 标记用户是否已登录
     var isSignedIn: Bool {
-        return false
+        return accessToken != nil
     }
     
     // 访问令牌，用于API认证，私有属性
     private var accessToken: String? {
-        return nil
+        return UserDefaults.standard.string(forKey: "access_token")
     }
     
     // 刷新令牌，用于在访问令牌过期时获取新的访问令牌，私有属性
     private var refreshToken: String? {
-        return nil
+        return UserDefaults.standard.string(forKey: "refresh_token")
     }
     
     // 令牌过期日期，用于判断访问令牌是否过期，私有属性
     private var tokenExpirationDate: Date? {
-        return nil
+          return UserDefaults.standard.object(forKey: "expiresDate") as? Date
     }
     
     // 判断是否需要刷新令牌，私有属性
     private var shouldRefreshToken: Bool {
-        return false
+        guard let expiresDate = tokenExpirationDate else {
+            return false
+        }
+        let currentDate = Date()
+        let fiveMinutes:TimeInterval = 300
+        return currentDate.addingTimeInterval(TimeInterval(fiveMinutes)) >= expiresDate
     }
     /// 使用授权码向服务器请求访问令牌（Token）
     public func exchangeCodeForToken(code: String) async -> Bool {
@@ -87,11 +92,10 @@ final class AuthManager {
                     headers: headers
                 )
                 .validate()
-                .serializingDecodable(TokenResponse.self)
+                .serializingDecodable(AUthResponse.self)
                 .value
             }.value
-            
-            print("✅ 获取 Token: \(tokenResponse)")
+            self.cacheToken(reslut: tokenResponse)
             return true
         } catch {
             print("❌ 获取 Token 失败: \(error.localizedDescription)")
@@ -103,7 +107,10 @@ final class AuthManager {
     
 
     /// 缓存（保存）从服务器获取到的访问令牌（Token）
-    public func cacheToken() {
+    public func cacheToken(reslut:AUthResponse) {
+        UserDefaults.standard.setValue(reslut.accessToken, forKey: "access_token")
+        UserDefaults.standard.setValue(reslut.refreshToken, forKey: "refresh_token")
+        UserDefaults.standard.setValue(Date().addingTimeInterval(TimeInterval(reslut.expiresIn)), forKey: "expiresDate")
     }
     
     public func refreshAccessToken() {
@@ -112,18 +119,4 @@ final class AuthManager {
 
 
 
-nonisolated struct TokenResponse: Decodable {
-    let refreshToken: String
-    let scope: String
-    let tokenType: String
-    let accessToken: String
-    let expiresIn: Int64
-    
-    enum CodingKeys: String, CodingKey {
-        case refreshToken = "refresh_token"
-        case scope
-        case tokenType = "token_type"
-        case accessToken = "access_token"
-        case expiresIn = "expires_in"
-    }
-}
+

@@ -29,36 +29,43 @@ class WelcomeViewController: UIViewController {
         sigInButton.frame = CGRect(x:20,y: view.height - 50 - view.safeAreaInsets.bottom,width: view.width - 40,height: 50)
     }
     
-  // @objc func didTapSigIn() {
-//        let vc = AuthViewController()
-//        vc.completionHandler = { [weak self] success in
-//            DispatchQueue.main.async {
-//                self?.handleSigin(success:success)
-//            }
-//        }
-//        vc.navigationItem.largeTitleDisplayMode = .never
-//        navigationController?.pushViewController(vc, animated: false)
-        
-        
-        
-   // }
-    
     @objc func didTapSigIn() {
-        Task {
-            let vc = AuthViewController()
-            vc.navigationItem.largeTitleDisplayMode = .never
-            navigationController?.pushViewController(vc, animated: true)
+        let authVC = AuthViewController()
+        authVC.navigationItem.largeTitleDisplayMode = .never
 
-            if let code = await vc.waitForCode() {
-                print("登录成功拿到 code: \(code)")
-                handleSigin(success: true)
-            } else {
-                handleSigin(success: false)
-            }
+        // 设置回调，当授权完成时通知登录页面
+        authVC.onAuthorizationCompleted = {  [weak self] success in
+            self?.handleSigin(success:success)
+            authVC.onAuthorizationCompleted = nil
         }
+        
+
+        navigationController?.pushViewController(authVC, animated: true)
+      
     }
-    private func handleSigin(success:Bool) {
-        print(success)
+    
+   
+    private func handleSigin(success: Bool) {
+        // 如果登录失败，则直接返回
+        guard success else { return }
+
+        // 登录成功，创建主应用的 TabBar 控制器
+        let mainAppTabBarVC = TabBarViewController()
+        
+        // 设置为全屏展示模式
+        mainAppTabBarVC.modalPresentationStyle = .fullScreen
+        
+        // 替换当前窗口的根控制器，实现直接跳转到主界面
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let sceneDelegate = windowScene.delegate as? UIWindowSceneDelegate,
+           let window = sceneDelegate.window {
+            window?.rootViewController = mainAppTabBarVC
+            window?.makeKeyAndVisible()
+        } else {
+            // 如果无法替换根控制器，则使用 present 方式展示
+            self.present(mainAppTabBarVC, animated: true, completion: nil)
+        }
+  
     }
     
     

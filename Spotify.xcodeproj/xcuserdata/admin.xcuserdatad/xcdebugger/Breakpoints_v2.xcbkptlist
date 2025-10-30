@@ -39,32 +39,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "9AC28A39-E77A-4D05-A061-276C4CA7A0DD"
+            uuid = "E9DBA508-1FFB-445F-9A24-C2589F1573B6"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Spotify/Controllers/Other/WelcomeViewController.swift"
+            filePath = "Spotify/Controllers/Other/AuthViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
-            landmarkName = "didTapSigIn()"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
+            landmarkName = "webView(_:decidePolicyFor:decisionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "EE160CAE-B43A-4CAF-9D34-7A222205124B"
-            shouldBeEnabled = "Yes"
+            uuid = "F9CF449B-F368-48C3-8682-65ECD9832CE0"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Spotify/Managers/AuthManager.swift"
+            filePath = "Spotify/Controllers/Other/AuthViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "exchangeCodeForToken(code:)"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "webView(_:decidePolicyFor:decisionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
