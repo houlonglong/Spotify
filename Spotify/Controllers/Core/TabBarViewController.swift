@@ -16,6 +16,7 @@ class TabBarViewController: UITabBarController {
         let home = HomeViewController()
         let search = SearchViewController()
         let library = LibraryViewController()
+      
         
         home.title = "首页"
         search.title = "搜索"

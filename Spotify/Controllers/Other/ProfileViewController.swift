@@ -11,9 +11,19 @@ class ProfileViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        hidesBottomBarWhenPushed = true
+        view.backgroundColor = .red
+        title = "321321"
+        Task {
+            do {
+                let profile = try await APICaller.shared.getCurrentUserProfile()
+                print("✅ 用户名:", profile.displayName)
+            } catch {
+                print("❌ 获取用户信息失败:", error.localizedDescription)
+            }
+        }
     }
+   
     
 
     /*

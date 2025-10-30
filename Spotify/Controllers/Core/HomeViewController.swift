@@ -11,18 +11,22 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
+        title = "首页"
+        view.backgroundColor = .systemBackground
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .prominent, target: self, action: #selector(didTapSttings))
 
-        Task {
-            do {
-                let profile = try await APICaller.shared.getCurrentUserProfile()
-                print("✅ 用户名:", profile.displayName)
-            } catch {
-                print("❌ 获取用户信息失败:", error.localizedDescription)
-            }
-        }
     }
-
-
+    @objc func didTapSttings() {
+        
+        let profileVc = ProfileViewController()
+        profileVc.hidesBottomBarWhenPushed = true 
+        navigationItem.backButtonTitle = ""
+        self.navigationController?.pushViewController(profileVc, animated: true)
+      
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+//        hidesBottomBarWhenPushed = false
+    }
 }
 
