@@ -29,16 +29,33 @@ class WelcomeViewController: UIViewController {
         sigInButton.frame = CGRect(x:20,y: view.height - 50 - view.safeAreaInsets.bottom,width: view.width - 40,height: 50)
     }
     
+  // @objc func didTapSigIn() {
+//        let vc = AuthViewController()
+//        vc.completionHandler = { [weak self] success in
+//            DispatchQueue.main.async {
+//                self?.handleSigin(success:success)
+//            }
+//        }
+//        vc.navigationItem.largeTitleDisplayMode = .never
+//        navigationController?.pushViewController(vc, animated: false)
+        
+        
+        
+   // }
+    
     @objc func didTapSigIn() {
-        let vc = AuthViewController()
-        vc.completionHandler = { [weak self] success in
-            DispatchQueue.main.async {
-                self?.handleSigin(success:success)
+        Task {
+            let vc = AuthViewController()
+            vc.navigationItem.largeTitleDisplayMode = .never
+            navigationController?.pushViewController(vc, animated: true)
+
+            if let code = await vc.waitForCode() {
+                print("登录成功拿到 code: \(code)")
+                handleSigin(success: true)
+            } else {
+                handleSigin(success: false)
             }
         }
-        vc.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.pushViewController(vc, animated: false)
-        
     }
     private func handleSigin(success:Bool) {
         print(success)
