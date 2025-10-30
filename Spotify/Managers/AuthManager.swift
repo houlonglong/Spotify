@@ -11,7 +11,7 @@ import Alamofire
 final class AuthManager {
     // 单例实例，全局唯一访问点
     static let shared = AuthManager()
-    
+    private var refreshingToken:Bool = false
 
     struct Constants {
        static let clientID = "8bee83f1304a435e96d229f7d2509acb"
@@ -67,6 +67,7 @@ final class AuthManager {
     }
     /// 使用授权码向服务器请求访问令牌（Token）
     public func exchangeCodeForToken(code: String) async -> Bool {
+       
         let parameters: [String: String] = [
             "grant_type": "authorization_code",
             "redirect_uri": Constants.redirectURI,
@@ -74,13 +75,9 @@ final class AuthManager {
         ]
         
         let basicToken = "\(Constants.clientID):\(Constants.client_secret)"
-        guard let data = basicToken.data(using: .utf8) else { return false }
-        let base64String = data.base64EncodedString()
-        
-        let headers: HTTPHeaders = [
-            "Authorization": "Basic \(base64String)",
-            "Content-Type": "application/x-www-form-urlencoded"
-        ]
+        guard basicToken.data(using: .utf8) != nil else { return false }
+      
+        let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded"]
         
         do {
             // Task.detached 在后台线程执行，避免 MainActor 隔离
@@ -110,64 +107,58 @@ final class AuthManager {
     /// 缓存（保存）从服务器获取到的访问令牌（Token）
     public func cacheToken(reslut:AUthResponse) {
         UserDefaults.standard.setValue(reslut.accessToken, forKey: "access_token")
-        if !reslut.refreshToken.isEmpty {
-            UserDefaults.standard.setValue(reslut.refreshToken, forKey: "refresh_token")
+        if let refreshToken = reslut.refreshToken, !refreshToken.isEmpty {
+            UserDefaults.standard.setValue(refreshToken, forKey: "refresh_token")
         }
       
         UserDefaults.standard.setValue(Date().addingTimeInterval(TimeInterval(reslut.expiresIn)), forKey: "expiresDate")
     }
     
-    public func refreshIfNeeded(completion: @escaping (Bool) -> Void) {
-        // 判断是否需要刷新
-        guard shouldRefreshToken else {
-            completion(false)
-            return
-        }
-        
-        // 必须有 refreshToken，否则无法刷新
-        guard let refreshToken = self.refreshToken else {
-            completion(false)
-            return
-        }
-        
-        let parameters: [String: String] = [
-            "grant_type": "refresh_token",
-            "refresh_token": refreshToken
-        ]
-        
-        let basicToken = "\(Constants.clientID):\(Constants.client_secret)"
-        guard let data = basicToken.data(using: .utf8) else {
-            completion(false)
-            return
-        }
-        let base64String = data.base64EncodedString()
-        
-        let headers: HTTPHeaders = [
-            "Authorization": "Basic \(base64String)",
-            "Content-Type": "application/x-www-form-urlencoded"
-        ]
-        
-        // 使用 Alamofire 异步请求，完成后通过闭包回调
-        AF.request(
-            Constants.tokenUrl,
-            method: .post,
-            parameters: parameters,
-            encoder: URLEncodedFormParameterEncoder.default,
-            headers: headers
-        )
-        .validate()
-        .responseDecodable(of: AUthResponse.self) { [weak self] response in
-            switch response.result {
-            case .success(let tokenResponse):
-                // 缓存新的 token
-                self?.cacheToken(reslut: tokenResponse)
-                completion(true)
-            case .failure(let error):
-                completion(false)
+    private var onRefreshBlocks = [((String) -> Void)]()
+    
+    /// 在需要有效 Token 时调用，会自动刷新或直接返回有效 Toke
+    public func withValidToken() async throws -> String {
+           if shouldRefreshToken {
+               let success = try await refreshIfNeeded()
+               if !success { throw NSError(domain: "", code: -1, userInfo: nil) }
+           }
+           
+           guard let token = accessToken else {
+               throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "没有 token"])
+           }
+           
+           return token
+       }
+    /// 判断是否需要刷新 Token 并执行刷新逻辑
+    public func refreshIfNeeded() async throws -> Bool {
+            guard shouldRefreshToken, let refreshToken = self.refreshToken else {
+                return true
             }
+            
+            let parameters: [String: String] = [
+                "grant_type": "refresh_token",
+                "refresh_token": refreshToken
+            ]
+            
+            let basicToken = "\(Constants.clientID):\(Constants.client_secret)"
+            let base64 = Data(basicToken.utf8).base64EncodedString()
+            let headers: HTTPHeaders = [
+                "Authorization": "Basic \(base64)",
+                "Content-Type": "application/x-www-form-urlencoded"
+            ]
+            
+            let data = try await AF.request(Constants.tokenUrl,
+                                            method: .post,
+                                            parameters: parameters,
+                                            encoder: URLEncodedFormParameterEncoder.default,
+                                            headers: headers)
+                .validate()
+                .serializingDecodable(AUthResponse.self)
+                .value
+            
+            cacheToken(reslut: data)
+            return true
         }
-    }
-
 }
 
 

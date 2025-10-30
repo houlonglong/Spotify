@@ -12,8 +12,15 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .red
-        
-        // Do any additional setup after loading the view.
+
+        Task {
+            do {
+                let profile = try await APICaller.shared.getCurrentUserProfile()
+                print("✅ 用户名:", profile.displayName)
+            } catch {
+                print("❌ 获取用户信息失败:", error.localizedDescription)
+            }
+        }
     }
 
 

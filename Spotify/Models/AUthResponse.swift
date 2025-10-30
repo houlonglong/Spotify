@@ -13,7 +13,7 @@ import Foundation
 
 
 nonisolated struct AUthResponse: Codable {
-    let refreshToken: String
+    let refreshToken: String?
     let scope: String
     let tokenType: String
     let accessToken: String
