@@ -74,10 +74,15 @@ final class AuthManager {
             "code": code
         ]
         
+//        let basicToken = "\(Constants.clientID):\(Constants.client_secret)"
+//        guard basicToken.data(using: .utf8) != nil else { return false }
+       
         let basicToken = "\(Constants.clientID):\(Constants.client_secret)"
-        guard basicToken.data(using: .utf8) != nil else { return false }
-      
-        let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded"]
+        let base64 = Data(basicToken.utf8).base64EncodedString()
+        let headers: HTTPHeaders = [
+            "Authorization": "Basic \(base64)",
+            "Content-Type": "application/x-www-form-urlencoded"
+        ]
         
         do {
             // Task.detached 在后台线程执行，避免 MainActor 隔离

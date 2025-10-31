@@ -26,12 +26,16 @@ class TabBarViewController: UITabBarController {
         home.navigationItem.largeTitleDisplayMode = .always;
         search.navigationItem.largeTitleDisplayMode = .always;
         library.navigationItem.largeTitleDisplayMode = .always;
-        
+      
         
         
         let homeNav = UINavigationController(rootViewController: home)
         let searchNav = UINavigationController(rootViewController: search)
         let libraryNav = UINavigationController(rootViewController: library)
+        
+        homeNav.navigationBar.tintColor = .label
+        searchNav.navigationBar.tintColor = .label
+        searchNav.navigationBar.tintColor = .label
         
         homeNav.tabBarItem = UITabBarItem(title:home.title, image: UIImage(systemName: "house"), tag: 1)
         searchNav.tabBarItem = UITabBarItem(title: "搜索", image: UIImage(systemName: "magnifyingglass"), tag: 2)

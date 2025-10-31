@@ -61,7 +61,8 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     private func viewProfile() {
-        print("跳转到个人资料页面")
+        let ProfileVC = ProfileViewController()
+        self.navigationController?.pushViewController(ProfileVC, animated: true)
     }
     
     private func logout() {
