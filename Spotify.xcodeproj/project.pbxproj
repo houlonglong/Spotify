@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		841696122EB4C12A00B1F5ED /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 841696112EB4C12A00B1F5ED /* SDWebImage */; };
 		847696D72EB3111A00B5D811 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 847696D62EB3111A00B5D811 /* Alamofire */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				841696122EB4C12A00B1F5ED /* SDWebImage in Frameworks */,
 				847696D72EB3111A00B5D811 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,6 +86,7 @@
 			name = Spotify;
 			packageProductDependencies = (
 				847696D62EB3111A00B5D811 /* Alamofire */,
+				841696112EB4C12A00B1F5ED /* SDWebImage */,
 			);
 			productName = Spotify;
 			productReference = 843BE1712EB1B93D00A0A523 /* Spotify.app */;
@@ -115,6 +118,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				847696D52EB3111A00B5D811 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				841696102EB4C12A00B1F5ED /* XCRemoteSwiftPackageReference "SDWebImage" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 843BE1722EB1B93D00A0A523 /* Products */;
@@ -354,6 +358,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		841696102EB4C12A00B1F5ED /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:SDWebImage/SDWebImage.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.21.3;
+			};
+		};
 		847696D52EB3111A00B5D811 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:Alamofire/Alamofire.git";
@@ -365,6 +377,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		841696112EB4C12A00B1F5ED /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 841696102EB4C12A00B1F5ED /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
 		847696D62EB3111A00B5D811 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 847696D52EB3111A00B5D811 /* XCRemoteSwiftPackageReference "Alamofire" */;

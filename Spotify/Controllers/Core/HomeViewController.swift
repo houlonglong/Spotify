@@ -18,10 +18,10 @@ class HomeViewController: UIViewController {
     }
     @objc func didTapSttings() {
         
-        let profileVc = ProfileViewController()
-        profileVc.hidesBottomBarWhenPushed = true 
+        let settingsVc = SettingsViewController()
+        settingsVc.hidesBottomBarWhenPushed = true
         navigationItem.backButtonTitle = ""
-        self.navigationController?.pushViewController(profileVc, animated: true)
+        self.navigationController?.pushViewController(settingsVc, animated: true)
       
     }
     override func viewDidDisappear(_ animated: Bool) {
@@ -30,3 +30,16 @@ class HomeViewController: UIViewController {
     }
 }
 
+
+import SwiftUI
+struct HomeViewControllerPreview: PreviewProvider {
+    static var previews: some View {
+        UIViewControllerPreview {
+            let  webNav = UINavigationController(rootViewController: HomeViewController())
+//              webNav.navigationBar.prefersLargeTitles = true
+//              webNav.viewControllers.first?.navigationItem.largeTitleDisplayMode = .always;
+           return  webNav
+        }
+        .edgesIgnoringSafeArea(.all)
+    }
+}

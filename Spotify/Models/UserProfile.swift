@@ -17,13 +17,14 @@ import Foundation
 
 // MARK: - UserProfile
 nonisolated struct UserProfile: Codable {
-    let country, displayName: String
-    let explicitContent: ExplicitContent
-    let externalUrls: ExternalUrls
-    let followers: Followers
-    let href: String
-    let id: String
-    let images: [Image]
+    let country:String?
+    let displayName: String
+    let explicitContent: ExplicitContent?
+    let externalUrls: ExternalUrls?
+    let followers: Followers?
+    let href: String?
+    let id: String?
+    let images: [Image]?
     let product, type, uri: String
 
     enum CodingKeys: String, CodingKey {
@@ -32,6 +33,45 @@ nonisolated struct UserProfile: Codable {
         case explicitContent = "explicit_content"
         case externalUrls = "external_urls"
         case followers, href, id, images, product, type, uri
+    }
+
+    // MARK: - 静态 Mock 数据
+    static let mockData: [String: Any] = [
+        "country": "JP",
+        "display_name": "月亮多会来",
+        "explicit_content": ["filter_enabled": false, "filter_locked": false],
+        "external_urls": ["spotify": "https://open.spotify.com/user/31mlpqc4r66ewc6vz4qp4g7bqu6m"],
+        "followers": ["href": NSNull(), "total": 123],
+        "href": "https://api.spotify.com/v1/users/31mlpqc4r66ewc6vz4qp4g7bqu6m",
+        "id": "31mlpqc4r66ewc6vz4qp4g7bqu6m",
+        "images": [
+            ["height": 300, "url": "https://i.scdn.co/image/ab6775700000ee856222536b819420ac2735e7f9", "width": 300],
+            ["height": 64, "url": "https://i.scdn.co/image/ab67757000003b826222536b819420ac2735e7f9", "width": 64]
+        ],
+        "product": "free",
+        "type": "user",
+        "uri": "spotify:user:31mlpqc4r66ewc6vz4qp4g7bqu6m"
+    ]
+
+    // MARK: - 静态解析方法
+    static func parseMockData() -> UserProfile? {
+        do {
+          
+            let jsonData = try JSONSerialization.data(withJSONObject: mockData, options: [])
+           
+
+            // 2️⃣ 直接解码成 UserProfile
+           
+//            print([jsonData,1111])
+             let decoder = JSONDecoder()
+//            print([decoder,2222222])
+//            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            let profile = try decoder.decode(UserProfile.self, from: jsonData)
+            return profile
+        } catch {
+            print("❌ 解析 mock 数据失败:", error.localizedDescription)
+            return nil
+        }
     }
 }
 
