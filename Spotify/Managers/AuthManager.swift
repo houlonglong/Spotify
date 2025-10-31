@@ -125,7 +125,7 @@ final class AuthManager {
     public func withValidToken() async throws -> String {
            if shouldRefreshToken {
                let success = try await refreshIfNeeded()
-               if !success { throw NSError(domain: "", code: -1, userInfo: nil) }
+               if !success! { throw NSError(domain: "", code: -1, userInfo: nil) }
            }
            
            guard let token = accessToken else {
@@ -135,7 +135,7 @@ final class AuthManager {
            return token
        }
     /// 判断是否需要刷新 Token 并执行刷新逻辑
-    public func refreshIfNeeded() async throws -> Bool {
+    public func refreshIfNeeded() async throws -> Bool? {
             guard shouldRefreshToken, let refreshToken = self.refreshToken else {
                 return true
             }
