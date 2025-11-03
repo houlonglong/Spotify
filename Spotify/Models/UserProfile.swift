@@ -24,7 +24,7 @@ nonisolated struct UserProfile: Codable {
     let followers: Followers?
     let href: String?
     let id: String?
-    let images: [Image]?
+    let images: [ApiImage]?
     let product, type, uri: String
 
     enum CodingKeys: String, CodingKey {
@@ -86,9 +86,6 @@ struct ExplicitContent: Codable {
 }
 
 // MARK: - ExternalUrls
-struct ExternalUrls: Codable {
-    let spotify: String
-}
 
 // MARK: - Followers
 struct Followers: Codable {
@@ -96,12 +93,6 @@ struct Followers: Codable {
     let total: Int
 }
 
-// MARK: - Image
-struct Image: Codable {
-    let height: Int
-    let url: String
-    let width: Int
-}
 
 // MARK: - Encode/decode helpers
 
