@@ -40,7 +40,7 @@ class HomeViewController: UIViewController {
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.backgroundColor = .red
+        collectionView.backgroundColor = .systemBackground
     }
     
     /// 创建一个 CollectionView Section 布局
@@ -60,6 +60,7 @@ class HomeViewController: UIViewController {
                 heightDimension: .fractionalHeight(1.0)
             )
         )
+        item.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
         
         // -------------------------------
         // 2️⃣ 创建 Group（Item 的容器）
@@ -69,26 +70,41 @@ class HomeViewController: UIViewController {
         // widthDimension: 1.0 → 宽度占整个 Section
         // heightDimension: 120 → 高度固定 120pt
         // subitems: [item] → 包含的 item 数组，这里只有一个 item
-        let group = NSCollectionLayoutGroup.vertical(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .absolute(120)
-            ),
-            subitems: [item]
-        )
+//        let group = NSCollectionLayoutGroup.vertical(
+//            layoutSize: NSCollectionLayoutSize(
+//                widthDimension: .fractionalWidth(1.0),
+//                heightDimension: .absolute(120)
+//            ),
+//            subitems: [item,item]
+//        )
+//        let group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+//                                                                                        heightDimension: .absolute(120)), repeatingSubitem: item, count: 3)
+    
         
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize:  NSCollectionLayoutSize(
+                         widthDimension: .fractionalWidth(1.0),
+                     heightDimension: .absolute(120)
+                    ),
+                                                     subitem: item, count: 3)
+//        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+//                                               heightDimension: .absolute(120))
+//
+//        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+//                                                       subitems: [item, item, item])
+//        
         // -------------------------------
         // 3️⃣ 创建 Section（Group 的容器）
         // -------------------------------
         // NSCollectionLayoutSection 定义了一个 section 的布局
         // 可以包含一个或多个 Group
         let sectionLayout = NSCollectionLayoutSection(group: group)
-        
+        //在这里的意思是“垂直于主滚动方向的”。
+        sectionLayout.orthogonalScrollingBehavior = .continuous
         // 可选：设置组间距
-        sectionLayout.interGroupSpacing = 10
+//        sectionLayout.interGroupSpacing = 10
         
         // 可选：设置 section 内边距（top, leading, bottom, trailing）
-        sectionLayout.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+//        sectionLayout.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
         
         // 返回 Section
         return sectionLayout
@@ -123,7 +139,7 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        cell.backgroundColor = .systemBlue // 临时显示颜色
+        cell.backgroundColor = .systemGreen // 临时显示颜色
         return cell
     }
 }
