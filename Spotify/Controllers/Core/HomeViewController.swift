@@ -108,9 +108,14 @@ class HomeViewController: UIViewController {
     }
     
     func fetchData() async throws ->  Void  {
-        let data =  try await APICaller.shared.getfollowing();
-        print(data)
-        
+        try await      APICaller.shared.getRecommendationGenre { result in
+            switch result {
+            case .success(let data):
+                print("Received data: \(data)")
+            case .failure(let error):
+                print("Error: \(error)")
+            }
+        }
             
              
     }
