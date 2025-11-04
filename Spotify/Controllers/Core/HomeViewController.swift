@@ -8,9 +8,6 @@
 import UIKit
 
 class HomeViewController: UIViewController {
-  
-    
- 
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ -> NSCollectionLayoutSection? in
             guard let self = self else { return nil }
@@ -26,9 +23,9 @@ class HomeViewController: UIViewController {
         view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .prominent, target: self, action: #selector(didTapSttings))
         configgureCollectionView()
-//        Task {
-//            try await fetchData()
-//            }
+        Task {
+            try await fetchData()
+            }
 
     }
     override func viewDidLayoutSubviews() {
@@ -111,7 +108,7 @@ class HomeViewController: UIViewController {
     }
     
     func fetchData() async throws ->  Void  {
-        let data =  try await APICaller.shared.getNewReleases();
+        let data =  try await APICaller.shared.getfollowing();
         print(data)
         
             

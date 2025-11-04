@@ -14,6 +14,10 @@ final class APICaller {
     
     let baseAPIURL = "https://api.spotify.com/v1"
     
+    enum APIError:Error {
+        case fiileedToGetData
+    }
+    
     func getCurrentUserProfile() async throws -> UserProfile {
         let token = try await AuthManager.shared.withValidToken()
         let url = URL(string: "\(baseAPIURL)/me")!
@@ -38,17 +42,39 @@ final class APICaller {
         ]
         
         let request =  AF.request(url, method: .get, headers: headers)
-        print(1111)
+        print(headers)
         let data = try await request
             .validate()
             .serializingData()
             .value
 
         let newReleases = try JSONDecoder().decode(NewReleases.self, from: data)
-        print(newReleases)
         return newReleases
     }
     
+    
+    //关注歌手的列表
+    public func getfollowing() async throws -> Following {
+        let token = try await AuthManager.shared.withValidToken()
+        let url = URL(string: "\(baseAPIURL)/me/following?type=artist")!
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer \(token)"
+        ]
+        
+        let request =  AF.request(url, method: .get, headers: headers)
+        print(headers)
+        let data = try await request
+            .validate()
+            .serializingData()
+            .value
+        
+        let following = try JSONDecoder().decode(Following.self, from: data)
+        return following
+    }
+    
+    
+    //已经过期
     public func featuredPlaylists() async throws -> FeaturedPlaylists {
      
         let token = try await AuthManager.shared.withValidToken()

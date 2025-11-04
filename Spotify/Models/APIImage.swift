@@ -14,3 +14,4 @@ struct ApiImage: Codable {
     var url: String?
     var width: Int?
 }
+
